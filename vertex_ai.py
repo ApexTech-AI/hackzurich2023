@@ -17,8 +17,8 @@ class VertexAI():
         self.model = TextGenerationModel.from_pretrained("text-bison-32k")
 
 
-    def summarize_document(self, content):
-        prompt = f'Analyse the following text and write a summary in a short paragraph:\n{content}\nSummary:'
+    def summarize_document(self, prompt, content):
+        prompt = f'Analyse the following text by taking this question \"{prompt}\" in consideration and write a summary in a short paragraph:\n{content}\nSummary:'
         print(prompt)
         return self.execute_prompt(prompt)        
 

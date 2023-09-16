@@ -64,6 +64,11 @@ def summarize_pdf():
     except KeyError as err:
         return jsonify({'error': 'Key path is missing'}), 400 
 
+    try:
+        prompt = json['prompt']
+    except KeyError as err:
+        return jsonify({'error': 'Key prompt is missing'}), 400 
+
     if not os.path.exists(path):
         return jsonify({'error': 'File does not exist'}), 400
 
@@ -79,7 +84,7 @@ def summarize_pdf():
         return jsonify({'summary': last_search[path], 'author': author, 'title': title, 'date': date})
 
     text = extract_text_from_pdf(path)
-    result = vertexai.summarize_document(text)
+    result = vertexai.summarize_document(prompt, text)
     last_search[path] = result
     return jsonify({'summary': result, 'author': author, 'title': title, 'date': date})
 
