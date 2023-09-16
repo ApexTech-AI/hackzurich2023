@@ -90,12 +90,7 @@ def generate_keywords():
 
     result_list = result.split(': ')[1].split(', ')
 
-    return jsonify({'keywords': result_list})
-
-
-@app.route('api/v1/get_last_search', methods=['GET'])
-def get_last_search():
-    
+    return jsonify({'keywords': result_list})    
 
 
 if __name__ == '__main__':
