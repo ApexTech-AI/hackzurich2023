@@ -43,3 +43,7 @@ def delete_index():
         print(f'Successfully deleted index {PDF_INDEX}')
     else:
         print(f'Index {PDF_INDEX} does not exist')
+
+
+if __name__ == '__main__':    
+    index_knowledge_base()

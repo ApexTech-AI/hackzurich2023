@@ -9,6 +9,7 @@ from search import search_pdf_text
 from common import vertexai
 from PyPDF2 import PdfReader
 import os.path
+from datetime import date
 
 
 app = flask.Flask(__name__)
@@ -94,9 +95,12 @@ def summarize_pdf():
     #    return jsonify({'summary': last_search[path], 'author': author, 'title': title, 'date': date})
 
     text = extract_text_from_pdf(path)
-    result = vertexai.summarize_document(prompt, text)
+    result, doc_related = vertexai.summarize_document(prompt, text)
     # last_search[path] = result
-    return jsonify({'summary': result, 'author': author, 'title': title, 'date': date})
+    if doc_related:
+        return jsonify({'summary': result, 'author': author, 'title': title, 'date': date})
+    else:
+        return jsonify({'summary': result, 'author': "PALM", 'title': "Simple Answer", 'date': date.today().strftime("%d/%m/%Y")})
 
 
 @app.route('/api/v1/generate_keywords', methods=['POST'])
