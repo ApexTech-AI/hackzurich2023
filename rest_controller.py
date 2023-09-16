@@ -20,11 +20,17 @@ last_search = dict()
 
 @app.route('/api/v1/autosearch', methods=['POST'])
 def autosearch():
-    question = request.args.get('question')
+    json = request.get_json()
 
-    keywords_url = url_for("generate_keywords")
-    keywords_response = requests.post(URL_BASE+keywords_url, json={"prompt": question})
-    keywords = keywords_response.json()['keywords']
+    if json is None:
+        return jsonify({'error': 'JSON File is missing'}), 400 
+
+    try:
+        question = json['question']
+    except KeyError as err:
+        return jsonify({'error': 'Key question is missing'}), 400 
+
+    keywords = get_keywords_list(question)
 
     print(keywords)
 
@@ -107,11 +113,16 @@ def generate_keywords():
     except KeyError as err:
         return jsonify({'error': 'Key prompt is missing'}), 400 
 
-    result = vertexai.get_keywords(prompt)
-
-    result_list = result.split(': ')[1].split(', ')
+    result_list = get_keywords_list(prompt)
 
     return jsonify({'keywords': result_list})    
+
+
+def get_keywords_list(prompt):
+    print (f'This is our prompt {prompt}')
+    result = vertexai.get_keywords(prompt)
+    result_list = result.split(', ')
+    return result_list
 
 
 if __name__ == '__main__':
