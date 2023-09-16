@@ -23,5 +23,14 @@ def reseed_database():
     return jsonify({'message': 'Reseed operation completed'})
 
 
+@app.route('/summarize', methods=['GET'])
+def summarize_pdf():
+    id = request.args.get('id')
+
+    if id is None:
+        return jsonify({'error': 'Parameter ID is missing'}), 400 
+
+    return jsonify({'result': 'This is great'})
+
 if __name__ == '__main__':
     app.run()
