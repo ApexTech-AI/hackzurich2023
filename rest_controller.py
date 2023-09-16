@@ -1,4 +1,6 @@
-from flask import Flask, request, jsonify
+import flask
+from flask_cors import CORS
+from flask import request, jsonify
 from index_knowledge_base import index_knowledge_base, delete_index
 from search import search_pdf_text
 from common import vertexai
