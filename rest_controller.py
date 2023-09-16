@@ -1,15 +1,20 @@
+
 import requests
-from flask import Flask, request, jsonify, url_for
+import flask
+from flask_cors import CORS
+from flask import request, jsonify, for_url
 from index_knowledge_base import index_knowledge_base, delete_index
 from search import search_pdf_text
 from common import vertexai
 
 
-app = Flask(__name__)
-URL_BASE = "http://localhost:5000"
+app = flask.Flask(__name__)
+app.config["DEBUG"] = True
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+URL_BASE = "http://localhost:5000/api/v1"
 
 
-@app.route('/autosearch', methods=['GET'])
+@app.route('/api/v1/autosearch', methods=['GET'])
 def autosearch():
     question = request.args.get('question')
 
@@ -26,7 +31,7 @@ def autosearch():
     return jsonify({'results': sleek_result})
 
 
-@app.route('/search', methods=['GET'])
+@app.route('/api/v1/search', methods=['POST'])
 def search():
     keywords = request.args.getlist('keyword')
 
@@ -37,14 +42,14 @@ def search():
     return jsonify({'results': results})
 
 
-@app.route('/reseed', methods=['POST'])
+@app.route('/api/v1/reseed', methods=['POST'])
 def reseed_database():
     delete_index()
     index_knowledge_base()
     return jsonify({'message': 'Reseed operation completed'})
 
 
-@app.route('/summarize', methods=['POST'])
+@app.route('/api/v1/summarize', methods=['POST'])
 def summarize_pdf():
     json = request.get_json()
 
@@ -60,7 +65,7 @@ def summarize_pdf():
     return jsonify({'summary': result})
 
 
-@app.route('/generate_keywords', methods=['POST'])
+@app.route('/api/v1/generate-keywords', methods=['POST'])
 def generate_keywords():
     json_file = request.get_json()
 
@@ -80,4 +85,4 @@ def generate_keywords():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="0.0.0.0", port=5000)
