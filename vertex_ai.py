@@ -14,17 +14,15 @@ class VertexAI():
             "top_p": 0.8,
             "top_k": 40
         }
-        self.model = TextGenerationModel.from_pretrained("text-bison-32k")
+        self.model = TextGenerationModel.from_pretrained("text-bison-4k")
 
 
     def summarize_document(self, prompt, content):
         prompt = f'Analyse the following text by taking this question \"{prompt}\" in consideration and write a summary in a short paragraph:\n{content}\nSummary:'
-        print(prompt)
         return self.execute_prompt(prompt)        
 
     def get_keywords(self, search_phrase):
         prompt = f'You are responsible for managing a search engine of a company\'s knowledge base that is selling concrete and machinery to concrete. Users come to you with search phrases. Suggest new keywords to your user as a comma-separated plain-text list to following search terms:\n{search_phrase}. Each new keyword shall either be a single or composed term. The suggestions shall be stored as a list of strings with the key \'suggestions\'.' 
-        print(prompt)
         return self.execute_prompt(prompt)
 
     def execute_prompt(self, prompt):
@@ -32,5 +30,4 @@ class VertexAI():
             prompt,
             **self.parameters
         )
-        print(f"Response from Model: {response.text}")
         return response.text
