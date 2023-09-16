@@ -30,4 +30,5 @@ class VertexAI():
             prompt,
             **self.parameters
         )
+        print (response.text)
         return response.text
