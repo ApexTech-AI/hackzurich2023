@@ -29,7 +29,10 @@ def autosearch():
     files = requests.post(URL_BASE+files_url)
 
     result = files.json()['results']
-    sleek_result = [x['id'] for x in result]
+
+    sleek_result = set()
+    for x in results:
+        sleek_result.add(x[id])
 
     return jsonify({'results': sleek_result})
 
