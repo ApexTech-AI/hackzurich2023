@@ -2,7 +2,7 @@
 import requests
 import flask
 from flask_cors import CORS
-from flask import request, jsonify, for_url
+from flask import request, jsonify, url_for
 from index_knowledge_base import index_knowledge_base, delete_index
 from search import search_pdf_text
 from common import vertexai
@@ -11,10 +11,10 @@ from common import vertexai
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-URL_BASE = "http://localhost:5000/api/v1"
+URL_BASE = "http://localhost:5000"
 
 
-@app.route('/api/v1/autosearch', methods=['GET'])
+@app.route('/api/v1/autosearch', methods=['POST'])
 def autosearch():
     question = request.args.get('question')
 
@@ -23,7 +23,7 @@ def autosearch():
     keywords = keywords_response.json()['keywords']
 
     files_url = url_for("search", **{"keyword": kw for kw in keywords})
-    files = requests.get(URL_BASE+files_url)
+    files = requests.post(URL_BASE+files_url)
 
     result = files.json()['results']
     sleek_result = [x['id'] for x in result]
@@ -65,7 +65,7 @@ def summarize_pdf():
     return jsonify({'summary': result})
 
 
-@app.route('/api/v1/generate-keywords', methods=['POST'])
+@app.route('/api/v1/generate_keywords', methods=['POST'])
 def generate_keywords():
     json_file = request.get_json()
 
