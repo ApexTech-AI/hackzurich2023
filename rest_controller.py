@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from index_knowledge_base import index_knowledge_base, delete_index
 from search import search_pdf_text
+from common import vertexai
 
 app = Flask(__name__)
 
@@ -23,14 +24,21 @@ def reseed_database():
     return jsonify({'message': 'Reseed operation completed'})
 
 
-@app.route('/summarize', methods=['GET'])
+@app.route('/summarize', methods=['POST'])
 def summarize_pdf():
-    id = request.args.get('id')
+    json = request.get_json()
 
-    if id is None:
-        return jsonify({'error': 'Parameter ID is missing'}), 400 
+    if json is None:
+        return jsonify({'error': 'JSON File is missing'}), 400 
 
-    return jsonify({'result': 'This is great'})
+    try:
+        text = json['text']
+    except KeyError as err:
+        return jsonify({'error': 'Key text is missing'}), 400 
+
+    result = vertexai.summarize_document(text)
+    return jsonify({'summary': result})
+    
 
 if __name__ == '__main__':
     app.run()
