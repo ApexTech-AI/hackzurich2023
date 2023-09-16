@@ -26,8 +26,8 @@ def autosearch():
     keywords_response = requests.post(URL_BASE+keywords_url, json={"prompt": question})
     keywords = keywords_response.json()['keywords']
 
-    files_url = url_for("search", **{"keyword": kw for kw in keywords})
-    files = requests.post(URL_BASE+files_url)
+    files_url = url_for("search")
+    files = requests.post(URL_BASE+files_url+"?"+'&'.join("keyword="+kw for kw in keywords))
 
     result = files.json()['results']
 
@@ -109,7 +109,7 @@ def generate_keywords():
 
     result_list = result.split(': ')[1].split(', ')
 
-    return jsonify({'keywords': result_list})    
+    return jsonify({'keywords': result_list})
 
 
 if __name__ == '__main__':
