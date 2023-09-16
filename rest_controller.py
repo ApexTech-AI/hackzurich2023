@@ -34,7 +34,7 @@ def autosearch():
     for x in result:
         sleek_result.add(x['id'])
 
-    return jsonify({'results': sleek_result})
+    return jsonify({'results': list(sleek_result)})
 
 
 @app.route('/api/v1/search', methods=['POST'])
