@@ -62,7 +62,7 @@ def summarize_pdf():
     except KeyError as err:
         return jsonify({'error': 'Key path is missing'}), 400 
 
-    if path in last_search.keys:
+    if path in last_search.keys():
         return jsonify({'summary': last_search[path]})
 
     text = extract_text_from_pdf(path)
