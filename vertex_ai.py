@@ -23,7 +23,7 @@ class VertexAI():
         self.execute_prompt(prompt)        
 
     def get_keywords(self, search_phrase):
-        prompt = f'You are responsible for managing a search engine of a company\'s knowledge base that is selling concrete and machinery to concrete. Users come to you with search phrases. Suggest new keywords to your user in a json format to following search terms:\n{search_phrase}. The suggestions shall be stored as a list of strings with the key \'suggestions\'.' 
+        prompt = f'You are responsible for managing a search engine of a company\'s knowledge base that is selling concrete and machinery to concrete. Users come to you with search phrases. Suggest new keywords to your user in a json format to following search terms:\n{search_phrase}. Each new keyword shall either be a single or composed term. The suggestions shall be stored as a list of strings with the key \'suggestions\'.' 
         print(prompt)
         self.execute_prompt(prompt)
 
