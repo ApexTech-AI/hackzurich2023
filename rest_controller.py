@@ -84,12 +84,12 @@ def summarize_pdf():
         title = info.title
         date = info.modification_date
 
-    if path in last_search.keys():
-        return jsonify({'summary': last_search[path], 'author': author, 'title': title, 'date': date})
+    # if path in last_search.keys():
+    #    return jsonify({'summary': last_search[path], 'author': author, 'title': title, 'date': date})
 
     text = extract_text_from_pdf(path)
     result = vertexai.summarize_document(prompt, text)
-    last_search[path] = result
+    # last_search[path] = result
     return jsonify({'summary': result, 'author': author, 'title': title, 'date': date})
 
 
