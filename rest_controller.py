@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from index_knowledge_base import index_knowledge_base, delete_index
 from search import search_pdf_text
 from common import vertexai
+import json
 
 app = Flask(__name__)
 
@@ -38,7 +39,26 @@ def summarize_pdf():
 
     result = vertexai.summarize_document(text)
     return jsonify({'summary': result})
-    
+
+
+@app.route('/generate-keywords', methods=['POST'])
+def generate_keywords():
+    json_file = request.get_json()
+
+    if json_file is None:
+        return jsonify({'error': 'JSON File is missing'}), 400 
+
+    try:
+        prompt = json_file['prompt']
+    except KeyError as err:
+        return jsonify({'error': 'Key prompt is missing'}), 400 
+
+    result = vertexai.get_keywords(prompt)
+
+    result_list = result.split(': ')[1].split(', ')
+
+    return "{\"keywords\":" + str(result_list) + "}", 200
+
 
 if __name__ == '__main__':
     app.run()
