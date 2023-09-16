@@ -3,7 +3,7 @@ import requests
 import flask
 from flask_cors import CORS
 from flask import request, jsonify, url_for
-from index_knowledge_base import index_knowledge_base, delete_index
+from index_knowledge_base import index_knowledge_base, delete_index, extract_text_from_pdf
 from search import search_pdf_text
 from common import vertexai
 
@@ -57,9 +57,13 @@ def summarize_pdf():
         return jsonify({'error': 'JSON File is missing'}), 400 
 
     try:
-        text = json['text']
+        path = json['path']
     except KeyError as err:
-        return jsonify({'error': 'Key text is missing'}), 400 
+        return jsonify({'error': 'Key path is missing'}), 400 
+
+    text = extract_text_from_pdf(path)
+    if text is None:
+        return jsonify({'error': 'File does not exist'}), 400
 
     result = vertexai.summarize_document(text)
     return jsonify({'summary': result})
