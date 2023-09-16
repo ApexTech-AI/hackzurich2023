@@ -30,7 +30,7 @@ class VertexAI():
     def execute_prompt(self, prompt):
         response = self.model.predict(
             prompt,
-            **parameters
+            **self.parameters
         )
         print(f"Response from Model: {response.text}")
 
