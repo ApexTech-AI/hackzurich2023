@@ -31,8 +31,8 @@ def autosearch():
     result = files.json()['results']
 
     sleek_result = set()
-    for x in result:
-        sleek_result.add(x[id])
+    for x in results:
+        sleek_result.add(x['id'])
 
     return jsonify({'results': sleek_result})
 
