@@ -7,7 +7,7 @@ import json
 
 
 # Open the PDF file
-with open('./BC-Bitumen-Coating-SDS-en_MY.pdf', 'rb') as f:
+with open('./dataset/safety_data_sheet/BC-Bitumen-Coating-SDS-en_MY.pdf', 'rb') as f:
     # Create a PDF Reader object
     pdf_reader = PyPDF2.PdfReader(f)
     
