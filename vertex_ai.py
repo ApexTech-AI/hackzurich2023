@@ -18,7 +18,7 @@ class VertexAI():
 
 
     def summarize_document(self, content):
-        prompt = f'Analyse the following text and write a summary:\n{content}\nSummary:'
+        prompt = f'Analyse the following text and write a summary in a short paragraph:\n{content}\nSummary:'
         print(prompt)
         return self.execute_prompt(prompt)        
 

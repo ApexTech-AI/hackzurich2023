@@ -13,6 +13,7 @@ app.config["DEBUG"] = True
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 URL_BASE = "http://localhost:5000"
 
+last_search = dict()
 
 @app.route('/api/v1/autosearch', methods=['POST'])
 def autosearch():
@@ -61,11 +62,15 @@ def summarize_pdf():
     except KeyError as err:
         return jsonify({'error': 'Key path is missing'}), 400 
 
+    if last_search.has_key(path):
+        return jsonify({'summary': last_search[path]})
+
     text = extract_text_from_pdf(path)
     if text is None:
         return jsonify({'error': 'File does not exist'}), 400
 
     result = vertexai.summarize_document(text)
+    last_search[path] = result
     return jsonify({'summary': result})
 
 
@@ -86,6 +91,11 @@ def generate_keywords():
     result_list = result.split(': ')[1].split(', ')
 
     return jsonify({'keywords': result_list})
+
+
+@app.route('api/v1/get_last_search', methods=['GET'])
+def get_last_search():
+    
 
 
 if __name__ == '__main__':
