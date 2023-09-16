@@ -117,7 +117,6 @@ def generate_keywords():
 
 
 def get_keywords_list(prompt):
-    print (f'This is our prompt {prompt}')
     result = vertexai.get_keywords(prompt)
     result_list = result.split(', ')
     return result_list
