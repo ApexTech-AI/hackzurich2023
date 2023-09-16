@@ -4,19 +4,48 @@ import requests
 import flask
 from flask_cors import CORS
 from flask import request, jsonify, url_for
-from index_knowledge_base import index_knowledge_base, delete_index, extract_text_from_pdf
+from index_knowledge_base import index_knowledge_base, index_pdf, delete_index, extract_text_from_pdf
 from search import search_pdf_text
 from common import vertexai
 from PyPDF2 import PdfReader
-import os.path
+from werkzeug.utils import secure_filename
+import os
 
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
+UPLOAD_FOLDER = os.path.join('dataset', 'uploads')
+ALLOWED_EXTENSIONS = {'pdf'}
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 URL_BASE = "http://localhost:5000"
 
 last_search = dict()
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@app.route('/api/v1/fileupload', methods=['POST'])
+def file_upload():
+    if 'pdf_file' not in request.files:
+        return 'No file part'
+
+    file = request.files['pdf_file']
+
+    if file.filename == '':
+        return "No selected file"
+
+    if file and allowed_file(file.filename):
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
+
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        index_pdf(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return "File uploaded successfully"
+    else:
+        return "Invalid file type (only PDF allowed)"
 
 @app.route('/api/v1/autosearch', methods=['POST'])
 def autosearch():
