@@ -1,11 +1,6 @@
 import PyPDF2
 import os
-from elasticsearch import Elasticsearch
-
-
-INDEX_KNOWLEDGE_BASE = False
-PDF_INDEX = 'pdf_index'
-es = Elasticsearch()
+from common import PDF_INDEX, elasticsearch as es
 
 
 def extract_text_from_pdf(pdf_path):
@@ -42,23 +37,9 @@ def index_knowledge_base(base_path=os.path.join('.', 'dataset')):
                 index_pdf(file_path)
 
 
-def search_pdf_text(keyword):
-    search_result = es.search(index=PDF_INDEX, body={'query': {'match': {'text': keyword}}})
-    hits = search_result.get('hits', {}).get('hits', [])
-    if not hits:
-        print(f"No hits on query {keyword}")
-        return []
-    for hit in hits:
-        print(hit.get("_id", "Error: Malformatted response"))
-    return list(map(lambda x: {"id": hit.get("_id"), "text": hit.get("_source").get("text")}, hits))
-
-
 def delete_index():
     if es.indices.exists(index=PDF_INDEX):
         es.indices.delete(index=PDF_INDEX)
         print(f'Successfully deleted index {PDF_INDEX}')
     else:
         print(f'Index {PDF_INDEX} does not exist')
-
-if INDEX_KNOWLEDGE_BASE:
-    index_knowledge_base()

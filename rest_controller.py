@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
-from search_engine import index_knowledge_base, search_pdf_text, delete_index
+from index_knowledge_base import index_knowledge_base, delete_index
+from search import search_pdf_text
 
 app = Flask(__name__)
 
