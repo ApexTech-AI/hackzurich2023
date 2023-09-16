@@ -15,9 +15,12 @@ def search_pdf_text(keywords):
     if not hits:
         print(f"No hits on query {keywords}")
         return []
+    result = list()
     for hit in hits:
         print(hit.get("_id", "Error: Malformatted response"))
-    return list(map(lambda x: {"id": hit.get("_id"), "text": hit.get("_source").get("text")}, hits))
+        result.append({"id": hit.get("_id"), "text": hit.get("_source").get("text")})
+
+    return result
 
 
 def search_pdf_context(vector):
