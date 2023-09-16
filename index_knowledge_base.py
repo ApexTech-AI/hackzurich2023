@@ -10,7 +10,7 @@ def extract_text_from_pdf(pdf_path):
             pdf_reader = PyPDF2.PdfReader(pdf_file)
             for page_num in range(len(pdf_reader.pages)):
                 page = pdf_reader.pages[page_num]
-                text += page.extractText()
+                text += page.extract_text()
         return text
     except PyPDF2.errors.PdfReadError as e:
         print(f"An error occured while processing '{pdf_path}': {str(e)}")
