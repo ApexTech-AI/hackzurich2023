@@ -18,7 +18,7 @@ class VertexAI():
 
 
     def summarize_document(self, prompt, content):
-        prompt = f'Analyse the following question: \n{prompt} \n Write a short summary to following text and take your analysation in consideration:\n{content}\nSummary:'
+        prompt = f'Analyse the following question: \n{prompt} \n Write a short summary to the following text and put it in relation to the previous question. Text:\n{content}\nSummary:'
         return self.execute_prompt(prompt)        
 
     def get_keywords(self, search_phrase):
