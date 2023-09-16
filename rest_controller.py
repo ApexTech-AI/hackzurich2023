@@ -9,12 +9,12 @@ app = Flask(__name__)
 
 @app.route('/search', methods=['GET'])
 def search():
-    keyword = request.args.get('keyword')
+    keywords = request.args.getlist('keyword')
 
-    if keyword is None:
+    if keywords is None:
         return jsonify({'error': 'Query parameter is missing'}), 400
 
-    results = search_pdf_text(keyword)
+    results = search_pdf_text(keywords)
     return jsonify({'results': results})
 
 
