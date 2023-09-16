@@ -22,7 +22,7 @@ class VertexAI():
         return self.execute_prompt(prompt)        
 
     def get_keywords(self, phrase):
-        prompt = f'Generate new keywords from the phrase:\n{phrase}\nEach keyword shall either be a single term or composed terms.\nDeliver the keywords as a comma-separated list of strings.' 
+        prompt = f'Generate related keywords from the phrase:\n{phrase}\nEach keyword shall either be a single term or composed terms.\nDeliver the keywords as a comma-separated list of strings.' 
         return self.execute_prompt(prompt)
 
     def execute_prompt(self, prompt):
@@ -30,4 +30,5 @@ class VertexAI():
             prompt,
             **self.parameters
         )
+        print(response.text)
         return response.text
