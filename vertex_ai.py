@@ -14,7 +14,7 @@ class VertexAI():
             "top_p": 0.8,
             "top_k": 40
         }
-        self.model = TextGenerationModel.from_pretrained("text-bison-32k")
+        self.model = TextGenerationModel.from_pretrained("text-bison")
 
 
     def summarize_document(self, prompt, content):
