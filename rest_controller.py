@@ -6,6 +6,8 @@ from flask import request, jsonify, url_for
 from index_knowledge_base import index_knowledge_base, delete_index, extract_text_from_pdf
 from search import search_pdf_text
 from common import vertexai
+from PyPDF2 import PdfReader
+import os.path
 
 
 app = flask.Flask(__name__)
@@ -62,16 +64,24 @@ def summarize_pdf():
     except KeyError as err:
         return jsonify({'error': 'Key path is missing'}), 400 
 
-    if path in last_search.keys():
-        return jsonify({'summary': last_search[path]})
-
-    text = extract_text_from_pdf(path)
-    if text is None:
+    if not os.path.exists(path):
         return jsonify({'error': 'File does not exist'}), 400
 
+    # Retrieve PDF Metadata
+    with open(path, 'rb') as f:
+        pdf = PdfReader(f)
+        info = pdf.metadata
+        author = info.author
+        title = info.title
+        date = info.modification_date
+
+    if path in last_search.keys():
+        return jsonify({'summary': last_search[path], 'author': author, 'title': title, 'date': date})
+
+    text = extract_text_from_pdf(path)
     result = vertexai.summarize_document(text)
     last_search[path] = result
-    return jsonify({'summary': result})
+    return jsonify({'summary': result, 'author': author, 'title': title, 'date': date})
 
 
 @app.route('/api/v1/generate_keywords', methods=['POST'])
