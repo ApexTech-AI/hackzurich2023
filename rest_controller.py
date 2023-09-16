@@ -1,10 +1,29 @@
-from flask import Flask, request, jsonify
+import requests
+from flask import Flask, request, jsonify, url_for
 from index_knowledge_base import index_knowledge_base, delete_index
 from search import search_pdf_text
 from common import vertexai
-import json
+
 
 app = Flask(__name__)
+URL_BASE = "http://localhost:5000"
+
+
+@app.route('/autosearch', methods=['GET'])
+def autosearch():
+    question = request.args.get('question')
+
+    keywords_url = url_for("generate_keywords")
+    keywords_response = requests.post(URL_BASE+keywords_url, json={"prompt": question})
+    keywords = keywords_response.json()['keywords']
+
+    files_url = url_for("search", **{"keyword": kw for kw in keywords})
+    files = requests.get(URL_BASE+files_url)
+
+    result = files.json()['results']
+    sleek_result = [x['id'] for x in result]
+
+    return jsonify({'results': sleek_result})
 
 
 @app.route('/search', methods=['GET'])
@@ -41,7 +60,7 @@ def summarize_pdf():
     return jsonify({'summary': result})
 
 
-@app.route('/generate-keywords', methods=['POST'])
+@app.route('/generate_keywords', methods=['POST'])
 def generate_keywords():
     json_file = request.get_json()
 
@@ -57,7 +76,7 @@ def generate_keywords():
 
     result_list = result.split(': ')[1].split(', ')
 
-    return "{\"keywords\":" + str(result_list) + "}", 200
+    return jsonify({'keywords': result_list})
 
 
 if __name__ == '__main__':
