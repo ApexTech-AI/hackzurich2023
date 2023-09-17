@@ -38,7 +38,7 @@ The "Sika Challenge" project offers a solution to these issues by harnessing the
 
 To get started with the "Sika Challenge" project, follow these steps:
 
-1. **Visit http://34.32.20.6:8080/**
+1. **Visit http://knowhere.westeurope.cloudapp.azure.com:8080/**
 2. **Question Statement:** Write an arbitrary question into the given window. It can be keywords, a problem description or a natural language question.
 3. **Knowledge Overview:** The system proposes the best fitting sources to you and enables you to easily fact check them, sorted by relevance.
 4. **Content Summary:** Our Knowledge Hub will summarize the most important knowledge within each paper regarding your question, and provide you with a concise answer.
